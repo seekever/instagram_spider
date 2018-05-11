@@ -1,0 +1,338 @@
+{
+  "activity_counts": {
+    "comment_likes": 0,
+    "comments": 0,
+    "likes": 0,
+    "relationships": 0,
+    "usertags": 0
+  },
+  "config": {
+    "csrf_token": "lznN35dvtP8oSKg9XCVEF9EzhhHJv1GT",
+    "viewer": {
+      "biography": "",
+      "external_url": null,
+      "full_name": "zhangyan",
+      "has_profile_pic": false,
+      "id": "1440140455",
+      "profile_pic_url": "https://scontent-frt3-2.cdninstagram.com/vp/856b9478629f7c2f4ae549c4c8cc5dd7/5B94597A/t51.2885-19/11906329_960233084022564_1448528159_a.jpg",
+      "profile_pic_url_hd": "https://scontent-frt3-2.cdninstagram.com/vp/856b9478629f7c2f4ae549c4c8cc5dd7/5B94597A/t51.2885-19/11906329_960233084022564_1448528159_a.jpg",
+      "username": "refuse_sea"
+    }
+  },
+  "supports_es6": false,
+  "country_code": "US",
+  "language_code": "en",
+  "locale": "en_US",
+  "entry_data": {},
+  "gatekeepers": {
+    "ld": true,
+    "vl": true,
+    "seo": true,
+    "seoht": true,
+    "2fac": true,
+    "lh": true,
+    "saa": true
+  },
+  "knobs": {
+    "acct:ntb": 0,
+    "cb": 1
+  },
+  "qe": {
+    "dash_for_vod": {
+      "g": "",
+      "p": {}
+    },
+    "aysf": {
+      "g": "",
+      "p": {}
+    },
+    "bc3l": {
+      "g": "",
+      "p": {}
+    },
+    "comment_reporting": {
+      "g": "test",
+      "p": {
+        "flatten": "true"
+      }
+    },
+    "direct_conversation_reporting": {
+      "g": "",
+      "p": {}
+    },
+    "direct_reporting": {
+      "g": "",
+      "p": {}
+    },
+    "reporting": {
+      "g": "",
+      "p": {}
+    },
+    "media_reporting": {
+      "g": "prevalence_with_dont_like_it_at_top",
+      "p": {
+        "sort_order": "dislikeattop"
+      }
+    },
+    "acc_recovery_link": {
+      "g": "",
+      "p": {}
+    },
+    "notif": {
+      "g": "",
+      "p": {}
+    },
+    "drct_nav": {
+      "g": "",
+      "p": {}
+    },
+    "pl_pivot_li": {
+      "g": "",
+      "p": {}
+    },
+    "pl_pivot_lo": {
+      "g": "",
+      "p": {}
+    },
+    "404_as_react": {
+      "g": "",
+      "p": {}
+    },
+    "acc_recovery": {
+      "g": "",
+      "p": {}
+    },
+    "client_gql": {
+      "g": "test_04_06",
+      "p": {
+        "is_enabled": "true"
+      }
+    },
+    "collections": {
+      "g": "",
+      "p": {}
+    },
+    "comment_ta": {
+      "g": "control",
+      "p": {
+        "is_enabled": "false"
+      }
+    },
+    "connections": {
+      "g": "",
+      "p": {}
+    },
+    "disc_ppl": {
+      "g": "follow_all_pagination_02_27",
+      "p": {
+        "has_follow_all_button": "true",
+        "has_pagination": "true"
+      }
+    },
+    "embeds": {
+      "g": "",
+      "p": {}
+    },
+    "ebdsim_li": {
+      "g": "",
+      "p": {}
+    },
+    "ebdsim_lo": {
+      "g": "",
+      "p": {}
+    },
+    "es6": {
+      "g": "",
+      "p": {}
+    },
+    "exit_story_creation": {
+      "g": "",
+      "p": {}
+    },
+    "gdpr_logged_out": {
+      "g": "",
+      "p": {}
+    },
+    "appsell": {
+      "g": "",
+      "p": {}
+    },
+    "imgopt": {
+      "g": "",
+      "p": {}
+    },
+    "follow_button": {
+      "g": "test",
+      "p": {
+        "is_inline": "true"
+      }
+    },
+    "loggedout": {
+      "g": "launch",
+      "p": {
+        "new_cta": "true",
+        "remove_upsell_banner": "true",
+        "update_nav": "true"
+      }
+    },
+    "loggedout_upsell": {
+      "g": "control_without_new_loggedout_upsell_content_03_15_18",
+      "p": {
+        "has_new_loggedout_upsell_content": "false"
+      }
+    },
+    "us_li": {
+      "g": "Test",
+      "p": {
+        "show_related_media": "true"
+      }
+    },
+    "msisdn": {
+      "g": "",
+      "p": {}
+    },
+    "bg_sync": {
+      "g": "",
+      "p": {}
+    },
+    "onetaplogin": {
+      "g": "test",
+      "p": {
+        "after_login": "true",
+        "storage_version": "one_tap_after_login_v2"
+      }
+    },
+    "onetaplogin_userbased": {
+      "g": "",
+      "p": {}
+    },
+    "login_poe": {
+      "g": "",
+      "p": {}
+    },
+    "prvcy_tggl": {
+      "g": "test",
+      "p": {
+        "is_enabled": "true"
+      }
+    },
+    "private_lo": {
+      "g": "test",
+      "p": {
+        "show_lock_ui": "true"
+      }
+    },
+    "profile_photo_nux_fbc_v2": {
+      "g": "test_prefill_photo_and_skip_nux",
+      "p": {
+        "prefill_photo": "true",
+        "skip_nux": "true"
+      }
+    },
+    "push_notifications": {
+      "g": "control",
+      "p": {
+        "is_enabled": "false",
+        "send_push": "false",
+        "show_modal": "false",
+        "show_notification": "false"
+      }
+    },
+    "reg": {
+      "g": "",
+      "p": {}
+    },
+    "reg_vp": {
+      "g": "control_group_2",
+      "p": {
+        "hide_value_prop": "false"
+      }
+    },
+    "feed_vp": {
+      "g": "launch",
+      "p": {
+        "is_hidden": "true"
+      }
+    },
+    "report_haf": {
+      "g": "",
+      "p": {}
+    },
+    "report_media": {
+      "g": "",
+      "p": {}
+    },
+    "report_profile": {
+      "g": "test",
+      "p": {
+        "is_enabled": "true"
+      }
+    },
+    "save": {
+      "g": "test",
+      "p": {
+        "is_enabled": "true"
+      }
+    },
+    "sidecar": {
+      "g": "",
+      "p": {}
+    },
+    "su_universe": {
+      "g": "",
+      "p": {}
+    },
+    "stale": {
+      "g": "",
+      "p": {}
+    },
+    "stories_lo": {
+      "g": "test_05_01",
+      "p": {
+        "hashtag": "true"
+      }
+    },
+    "stories": {
+      "g": "",
+      "p": {}
+    },
+    "tp_pblshr": {
+      "g": "",
+      "p": {}
+    },
+    "video": {
+      "g": "",
+      "p": {}
+    },
+    "gdpr_settings": {
+      "g": "",
+      "p": {}
+    },
+    "gdpr_eu_tos": {
+      "g": "",
+      "p": {}
+    },
+    "gdpr_row_tos": {
+      "g": "",
+      "p": {}
+    },
+    "fd_gr": {
+      "g": "",
+      "p": {}
+    },
+    "felix": {
+      "g": "",
+      "p": {}
+    }
+  },
+  "hostname": "www.instagram.com",
+  "platform": "web",
+  "rhx_gis": "fc2e73d4fd7dddcd31d28bea5cb2df59",
+  "nonce": "R79R+OT1NubT0K2tjbjfNg==",
+  "is_bot": false,
+  "zero_data": {},
+  "rollout_hash": "43b4c36c01b8",
+  "bundle_variant": "base",
+  "probably_has_app": false,
+  "show_app_install": true
+}
