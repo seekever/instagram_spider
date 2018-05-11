@@ -1,0 +1,301 @@
+{
+  "activity_counts": null,
+  "config": {
+    "csrf_token": "MYdJzhP1mJT8oVC0FLyhYEC6KV49v2pz",
+    "viewer": null
+  },
+  "supports_es6": false,
+  "country_code": "US",
+  "language_code": "en",
+  "locale": "en_US",
+  "entry_data": {
+    "LandingPage": [
+      {
+        "captcha": {
+          "enabled": false,
+          "key": ""
+        },
+        "hsite_redirect_url": "",
+        "prefill_phone_number": "",
+        "gdpr_required": false,
+        "tos_version": "default"
+      }
+    ]
+  },
+  "gatekeepers": {
+    "ld": true,
+    "seo": true,
+    "seoht": true,
+    "lh": true,
+    "saa": true
+  },
+  "knobs": {
+    "acct:ntb": 0,
+    "cb": 1
+  },
+  "qe": {
+    "dash_for_vod": {
+      "g": "",
+      "p": {}
+    },
+    "aysf": {
+      "g": "",
+      "p": {}
+    },
+    "bc3l": {
+      "g": "",
+      "p": {}
+    },
+    "comment_reporting": {
+      "g": "",
+      "p": {}
+    },
+    "direct_conversation_reporting": {
+      "g": "",
+      "p": {}
+    },
+    "direct_reporting": {
+      "g": "",
+      "p": {}
+    },
+    "reporting": {
+      "g": "",
+      "p": {}
+    },
+    "media_reporting": {
+      "g": "",
+      "p": {}
+    },
+    "acc_recovery_link": {
+      "g": "",
+      "p": {}
+    },
+    "notif": {
+      "g": "",
+      "p": {}
+    },
+    "drct_nav": {
+      "g": "",
+      "p": {}
+    },
+    "pl_pivot_li": {
+      "g": "",
+      "p": {}
+    },
+    "pl_pivot_lo": {
+      "g": "",
+      "p": {}
+    },
+    "404_as_react": {
+      "g": "",
+      "p": {}
+    },
+    "acc_recovery": {
+      "g": "",
+      "p": {}
+    },
+    "client_gql": {
+      "g": "",
+      "p": {}
+    },
+    "collections": {
+      "g": "",
+      "p": {}
+    },
+    "comment_ta": {
+      "g": "",
+      "p": {}
+    },
+    "connections": {
+      "g": "",
+      "p": {}
+    },
+    "disc_ppl": {
+      "g": "",
+      "p": {}
+    },
+    "embeds": {
+      "g": "",
+      "p": {}
+    },
+    "ebdsim_li": {
+      "g": "",
+      "p": {}
+    },
+    "ebdsim_lo": {
+      "g": "",
+      "p": {}
+    },
+    "es6": {
+      "g": "",
+      "p": {}
+    },
+    "exit_story_creation": {
+      "g": "",
+      "p": {}
+    },
+    "gdpr_logged_out": {
+      "g": "",
+      "p": {}
+    },
+    "appsell": {
+      "g": "",
+      "p": {}
+    },
+    "imgopt": {
+      "g": "",
+      "p": {}
+    },
+    "follow_button": {
+      "g": "",
+      "p": {}
+    },
+    "loggedout": {
+      "g": "launch",
+      "p": {
+        "new_cta": "true",
+        "remove_upsell_banner": "true",
+        "update_nav": "true"
+      }
+    },
+    "loggedout_upsell": {
+      "g": "control_without_new_loggedout_upsell_content_03_15_18",
+      "p": {
+        "has_new_loggedout_upsell_content": "false"
+      }
+    },
+    "us_li": {
+      "g": "",
+      "p": {}
+    },
+    "msisdn": {
+      "g": "",
+      "p": {}
+    },
+    "bg_sync": {
+      "g": "",
+      "p": {}
+    },
+    "onetaplogin": {
+      "g": "test",
+      "p": {
+        "after_login": "true",
+        "storage_version": "one_tap_after_login_v2"
+      }
+    },
+    "onetaplogin_userbased": {
+      "g": "",
+      "p": {}
+    },
+    "login_poe": {
+      "g": "",
+      "p": {}
+    },
+    "prvcy_tggl": {
+      "g": "",
+      "p": {}
+    },
+    "private_lo": {
+      "g": "",
+      "p": {}
+    },
+    "profile_photo_nux_fbc_v2": {
+      "g": "",
+      "p": {}
+    },
+    "push_notifications": {
+      "g": "",
+      "p": {}
+    },
+    "reg": {
+      "g": "",
+      "p": {}
+    },
+    "reg_vp": {
+      "g": "control_group_1",
+      "p": {
+        "hide_value_prop": "false"
+      }
+    },
+    "feed_vp": {
+      "g": "",
+      "p": {}
+    },
+    "report_haf": {
+      "g": "",
+      "p": {}
+    },
+    "report_media": {
+      "g": "",
+      "p": {}
+    },
+    "report_profile": {
+      "g": "",
+      "p": {}
+    },
+    "save": {
+      "g": "",
+      "p": {}
+    },
+    "sidecar": {
+      "g": "",
+      "p": {}
+    },
+    "su_universe": {
+      "g": "",
+      "p": {}
+    },
+    "stale": {
+      "g": "",
+      "p": {}
+    },
+    "stories_lo": {
+      "g": "test_03_15",
+      "p": {
+        "stories_profile": "true"
+      }
+    },
+    "stories": {
+      "g": "",
+      "p": {}
+    },
+    "tp_pblshr": {
+      "g": "",
+      "p": {}
+    },
+    "video": {
+      "g": "",
+      "p": {}
+    },
+    "gdpr_settings": {
+      "g": "",
+      "p": {}
+    },
+    "gdpr_eu_tos": {
+      "g": "",
+      "p": {}
+    },
+    "gdpr_row_tos": {
+      "g": "",
+      "p": {}
+    },
+    "fd_gr": {
+      "g": "",
+      "p": {}
+    },
+    "felix": {
+      "g": "",
+      "p": {}
+    }
+  },
+  "hostname": "www.instagram.com",
+  "platform": "web",
+  "rhx_gis": "fc2e73d4fd7dddcd31d28bea5cb2df59",
+  "nonce": "L6qlgA7vDyMe04qnEAgFrw==",
+  "is_bot": false,
+  "zero_data": {},
+  "rollout_hash": "43b4c36c01b8",
+  "bundle_variant": "base",
+  "probably_has_app": false,
+  "show_app_install": true
+}
