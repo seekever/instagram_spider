@@ -7,11 +7,10 @@ import requests
 
 # 媒体信息，包括图片和视频
 class Media(object):
-    def __init__(self, id='', url='', name='', video=False, download_url='', multiple=False):
+    def __init__(self, id='', url='', video=False, download_url='', multiple=False):
         self.id = id
         # 详情页
         self.url = url
-        self.name = name
         self.video = video
         # 下载地址
         self.download_url = download_url
@@ -29,11 +28,13 @@ class Instagram(object):
     proxies = {"http": "http://127.0.0.1:1080", "https": "http://127.0.0.1:1080"}
 
     # 首页
-    home_url = 'https://www.instagram.com'
+    home_url = 'https://www.instagram.com/'
     # 收藏页
     saved_url = 'https://www.instagram.com/{0}/saved/'
     # 登录页
     login_url = 'https://www.instagram.com/accounts/login/ajax/'
+
+    gis = '{{"shortcode":"{0}","first":50,"after":"{1}"}}'
 
     # sharedData 正则表达式，sharedData 包含 csrf token，username，媒体地址，...... 等信息
     shared_data_regex = r'<script type="text/javascript">\s*window._sharedData\s*=\s*({.*});\s*</script>'
@@ -55,6 +56,9 @@ class Instagram(object):
         self.session.headers[
             'User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0'
 
+        # 收藏列表
+        self.saved = []
+        # 媒体列表
         self.medias = []
 
     def __str__(self):
@@ -62,6 +66,7 @@ class Instagram(object):
             self.csrf_token, self.rhx_gis,
             self.username, self.user_id, self.x_instagram_gis)
 
+    # 访问首页得到 csrf_token
     def access_home(self):
         r = self.session.get(url=Instagram.home_url, timeout=30)
         r.encoding = 'utf-8'
@@ -72,6 +77,7 @@ class Instagram(object):
         self.csrf_token = json_obj['config']['csrf_token']
         self.rhx_gis = json_obj['rhx_gis']
 
+    # 登录
     def login(self):
         data = {'password': self.password, 'queryParams': '{}', 'username': self.login_id}
         self.session.headers['X-CSRFToken'] = self.csrf_token
@@ -94,15 +100,19 @@ class Instagram(object):
         self.rhx_gis = json_obj['rhx_gis']
 
     def gen_rhx_gis(self):
-        src = '{0}:/{1}/:{2}'.format(self.rhx_gis, self.username, '')
+        src = Instagram.gis.format('', '')
+        data = self.rhx_gis + ":" + src
+        print(data)
         md5 = hashlib.md5()
-        md5.update(str.encode(src))
-        self.x_instagram_gis = md5.hexdigest()
+        md5.update(data.encode('utf-8'))
+        print(md5.hexdigest())
+        # self.x_instagram_gis = md5.hexdigest()
 
-    def fetch_medias(self):
-        album_url = 'https://www.instagram.com/{0}/?__a=1'.format(self.username)
+    # 得到收藏列表
+    def fetch_saved(self):
+        saved_url = 'https://www.instagram.com/{0}/?__a=1'.format(self.username)
         self.session.headers['X-Instagram-GIS'] = 'b6a16681b1f62218fead4991aeeea38b'
-        r = self.session.get(url=album_url, timeout=30)
+        r = self.session.get(url=saved_url, timeout=30)
         if r.status_code == 200:
             json_obj = r.json()
             graphql = json_obj['graphql']
@@ -113,11 +123,51 @@ class Instagram(object):
                 media = Media(id=node['id'],
                               url='https://www.instagram.com/p/{0}/?saved-by={1}'.format(node['shortcode'],
                                                                                          self.username),
-                              name=node['edge_media_to_caption']['edges'][0]['node']['text'],
                               video=node['is_video'], download_url=node['display_url'],
                               multiple=(node['__typename'] == 'GraphSidecar'))
-                self.medias.append(media)
-                print(str(node))
+                self.saved.append(media)
+                # print(str(node))
+
+    # 访问收藏详情得到媒体信息
+    def get_medias(self, media):
+        r = self.session.get(media.url)
+        html = r.text
+        s = re.search(Instagram.shared_data_regex, html)
+        self.shared_data = s.group(1)
+        json_obj = json.loads(self.shared_data, encoding='utf8')
+        if media.multiple:
+            self.medias += self.get_multiple_medias(json_obj, media.video)
+        else:
+            self.medias += self.get_single_medias(json_obj, media.video)
+
+    def get_single_medias(self, json_obj, video):
+        medias = []
+        url_name = None
+        if video:
+            url_name = 'video_url'
+        else:
+            url_name = 'display_url'
+        node = json_obj['entry_data']['PostPage'][0]['graphql']['shortcode_media']
+        medias.append(
+            Media(id=node['id'], url='https://www.instagram.com/p/{0}/?saved-by={1}'.format(node['shortcode']),
+                  video=media.video, multiple=media.multiple,
+                  download_url=node[url_name]))
+        return medias
+
+    def get_multi_medias(self, json_obj, video):
+        medias = []
+        url_name = None
+        if video:
+            url_name = 'video_url'
+        else:
+            url_name = 'display_url'
+        nodes = json_obj['entry_data']['PostPage'][0]['graphql']['shortcode_media']['edge_sidecar_to_children']['edges']
+        for node in nodes:
+            medias.append(
+                Media(id=node['id'], url='https://www.instagram.com/p/{0}/?saved-by={1}'.format(node['shortcode']),
+                      video=media.video, multiple=media.multiple,
+                      download_url=node[url_name]))
+        return medias
 
 
 if __name__ == '__main__':
@@ -126,6 +176,7 @@ if __name__ == '__main__':
     it.login()
     it.access_saved()
     # it.gen_rhx_gis()
-    it.fetch_medias()
-    for media in it.medias:
-        print(media)
+    it.fetch_saved()
+    for media in it.saved:
+        it.get_medias(media)
+    print(it.medias)
