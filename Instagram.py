@@ -6,47 +6,18 @@ import os.path
 import re
 import requests
 
-from config import LOGIN_ID, PASSWORD
-
-
-# 媒体信息，包括图片和视频
-class Media(object):
-    def __init__(self, id='', url='', video=False, download_url='', multiple=False):
-        self.id = id
-        # 详情页
-        self.url = url
-        self.video = video
-        # 下载地址
-        self.download_url = download_url
-        # 是否多个资源
-        self.multiple = multiple
-
-    def __str__(self):
-        return "Media: id={0}, video={1}, multiple={2}, url={3}, download_url={4}".format(
-            self.id, self.video, self.multiple, self.url, self.download_url
-        )
+from constant import *
+from media import Media
+from user import LOGIN_ID, PASSWORD
 
 
 class Instagram(object):
-    # 代理设置
-    proxies = {"http": "http://127.0.0.1:1080", "https": "http://127.0.0.1:1080"}
-
-    # 首页
-    home_url = 'https://www.instagram.com/'
-    # 收藏页
-    saved_url = 'https://www.instagram.com/{0}/saved/'
-    # 登录页
-    login_url = 'https://www.instagram.com/accounts/login/ajax/'
-
-    gis = '{{"shortcode":"{0}","first":50,"after":"{1}"}}'
-
-    # sharedData 正则表达式，sharedData 包含 csrf token，username，媒体地址，...... 等信息
-    shared_data_regex = r'<script type="text/javascript">\s*window._sharedData\s*=\s*({.*});\s*</script>'
+    # gis = '{{"shortcode":"{0}","first":50,"after":"{1}"}}'
 
     def __init__(self, csrf_token='', rhx_gis='', username='', user_id='', login_id='', password='',
-                 root='c:\instagram'):
+                 rootpath='c:\instagram'):
 
-        self.root = root
+        self.rootpath = rootpath
 
         self.csrf_token = csrf_token
         self.rhx_gis = rhx_gis
@@ -60,9 +31,8 @@ class Instagram(object):
         self.password = password
 
         self.session = requests.session()
-        self.session.proxies = Instagram.proxies
-        self.session.headers[
-            'User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0'
+        self.session.proxies = PROXIES
+        self.session.headers['User-Agent'] = USER_AGENT
 
         self.has_next_page = True
         self.end_cursor = ''
@@ -79,10 +49,10 @@ class Instagram(object):
 
     # 访问首页得到 csrf_token
     def access_home(self):
-        r = self.session.get(url=Instagram.home_url, timeout=30)
-        r.encoding = 'utf-8'
+        r = self.session.get(url=HOME_URL, timeout=30)
+        r.encoding = CHARSET
         html = r.text
-        s = re.search(Instagram.shared_data_regex, html)
+        s = re.search(SHARED_DATA_REGEX, html)
         self.shared_data = s.group(1)
         json_obj = json.loads(self.shared_data, encoding='utf8')
         self.csrf_token = json_obj['config']['csrf_token']
@@ -92,18 +62,18 @@ class Instagram(object):
     def login(self):
         data = {'password': self.password, 'queryParams': '{}', 'username': self.login_id}
         self.session.headers['X-CSRFToken'] = self.csrf_token
-        r = self.session.post(url=Instagram.login_url, data=data, timeout=30)
-        r.encoding = 'utf-8'
+        r = self.session.post(url=LOGIN_URL, data=data, timeout=30)
+        r.encoding = CHARSET
         json_obj = r.json()
         if json_obj['authenticated']:
             self.user_id = json_obj['userId']
 
     # 主要是拿到 username
     def access_saved(self):
-        r = self.session.get(Instagram.saved_url.format(self.username), timeout=30)
-        r.encoding = 'utf-8'
+        r = self.session.get(SAVED_URL.format(self.username), timeout=30)
+        r.encoding = CHARSET
         html = r.text
-        s = re.search(Instagram.shared_data_regex, html)
+        s = re.search(SHARED_DATA_REGEX, html)
         json_obj = json.loads(s.group(1), encoding='utf8')
         config = json_obj['config']
         self.csrf_token = config['csrf_token']
@@ -115,7 +85,7 @@ class Instagram(object):
         data = self.rhx_gis + ":" + src
         print(data)
         md5 = hashlib.md5()
-        md5.update(data.encode('utf-8'))
+        md5.update(data.encode(CHARSET))
         print(md5.hexdigest())
         # self.x_instagram_gis = md5.hexdigest()
 
@@ -135,9 +105,8 @@ class Instagram(object):
             for edge in edges:
                 node = edge['node']
                 media = Media(id=node['id'],
-                              url='https://www.instagram.com/p/{0}/?saved-by={1}'.format(node['shortcode'],
-                                                                                         self.username),
-                              video=node['is_video'], download_url=node['display_url'],
+                              shortcode=node['shortcode'],
+                              download_url=node['display_url'],
                               multiple=(node['__typename'] == 'GraphSidecar'))
                 self.saved.append(media)
                 # print(str(node))
@@ -146,7 +115,7 @@ class Instagram(object):
     def get_medias(self, media):
         r = self.session.get(media.url)
         html = r.text
-        s = re.search(Instagram.shared_data_regex, html)
+        s = re.search(SHARED_DATA_REGEX, html)
         self.shared_data = s.group(1)
         json_obj = json.loads(self.shared_data, encoding='utf8')
         if media.multiple:
@@ -165,8 +134,7 @@ class Instagram(object):
             url_name = 'display_url'
         medias.append(
             Media(id=node['id'],
-                  url='https://www.instagram.com/p/{0}/?saved-by={1}'.format(node['shortcode'], self.username),
-                  video=video,
+                  shortcode=node['shortcode'],
                   download_url=node[url_name]))
         return medias
 
@@ -182,15 +150,14 @@ class Instagram(object):
                 url_name = 'display_url'
             medias.append(
                 Media(id=node['id'],
-                      url='https://www.instagram.com/p/{0}/?saved-by={1}'.format(node['shortcode'], self.username),
-                      video=video,
+                      shortcode=node['shortcode'],
                       download_url=node[url_name]))
         return medias
 
     def mkdir(self):
-        if not os.path.exists(self.root):
-            os.mkdir(self.root)
-        os.chdir(self.root)
+        if not os.path.exists(self.rootpath):
+            os.mkdir(self.rootpath)
+        os.chdir(self.rootpath)
         if not os.path.exists(self.username):
             os.mkdir(self.username)
         os.chdir(self.username)
@@ -218,12 +185,13 @@ class Instagram(object):
 if __name__ == '__main__':
     it = Instagram(login_id=LOGIN_ID, password=PASSWORD)
     it.access_home()
-    it.login()
-    it.access_saved()
-    # it.gen_rhx_gis()
-    while it.has_next_page:
-        it.fetch_saved()
-    for media in it.saved:
-        it.get_medias(media)
-    it.mkdir()
-    it.download_medias()
+    print(it)
+    # it.login()
+    # it.access_saved()
+    # # it.gen_rhx_gis()
+    # while it.has_next_page:
+    #     it.fetch_saved()
+    # for media in it.saved:
+    #     it.get_medias(media)
+    # it.mkdir()
+    # it.download_medias()
