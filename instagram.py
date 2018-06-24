@@ -181,7 +181,10 @@ if __name__ == '__main__':
         page += 1
         time.sleep(3 if page % 5 == 0 else 1)
         print('get medias for: ' + shortcode)
-        it.get_medias(shortcode)
+        try:
+            it.get_medias(shortcode)
+        except:
+            print('get media error')
 
     print('mkdir')
     it.mkdir()
