@@ -16,7 +16,7 @@ LOGIN_URL = 'https://www.instagram.com/accounts/login/ajax/'
 GRAPHQL_START_URL = 'https://www.instagram.com/{}/?__a=1'
 
 # 获取收藏的后续页
-GRAPHQL_NEXT_URL = 'https://www.instagram.com/graphql/query/?query_hash={}&variables={{"id":"{}","first":50,"after":"{}"}}'
+GRAPHQL_NEXT_URL = 'https://www.instagram.com/graphql/query/?query_hash={}&variables={{"id":"{}","first":100,"after":"{}"}}'
 
 # 收藏详情页
 SHORTCODE_URL = 'https://www.instagram.com/p/{}/?saved-by={}'

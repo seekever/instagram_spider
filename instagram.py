@@ -4,9 +4,12 @@ import os
 import os.path
 import re
 import requests
+import sqlite3
+import sys
 import time
 
 from constant import *
+from dbconfig import *
 from media import Media
 from user import *
 
@@ -34,6 +37,20 @@ class Instagram(object):
         self.shortcodes = []
         # 媒体列表
         self.medias = []
+
+        # 数据库文件全名
+        self.dbfile = os.path.sep.join((rootpath, db_path, db_file))
+
+        # 已打开的数据库连接
+        self.conn = None
+        # 数据库游标
+        self.cursor = None
+
+        # 已下载的 Shortcode
+        self.downloaded_shortcode = []
+
+        # 本次新下载的文件
+        self.new_download = 0
 
     def __str__(self):
         return 'Instagram: csrf_token={}, username={}, user_id={}, has_next_page={}'.format(
@@ -135,6 +152,9 @@ class Instagram(object):
     def mkdir(self):
         if not os.path.exists(self.rootpath):
             os.mkdir(self.rootpath)
+
+        self.prepare_database()
+
         os.chdir(self.rootpath)
         if not os.path.exists(self.username):
             os.mkdir(self.username)
@@ -145,23 +165,75 @@ class Instagram(object):
         pos = media.url.rfind('.')
         filename = media.id + media.url[pos:]
         if os.path.exists(filename):
-            print('file already exists. pass')
+            print('\t\tfile already exists. pass')
         else:
-            print('download file: ' + filename)
+            print('\t\tdownload file: ' + filename)
             req = self.http_req(media.url)
             try:
                 with open(filename, "wb") as file:
                     file.write(req.content)
+                self.new_download += 1
             except:
-                print('download file fail: ' + filename)
+                print('\t\tdownload file fail: ' + filename)
                 if os.path.exists(filename):
                     os.remove(filename)
+
+    # 如果数据库不存在则创建
+    def prepare_database(self):
+        if not os.path.exists(self.dbfile):
+            os.mkdir(self.rootpath + os.path.sep + db_path)
+
+            # 建库建表
+            conn = sqlite3.connect(self.dbfile)
+            cursor = conn.cursor()
+            try:
+                cursor.execute(db_create_table)
+                cursor.close()
+                conn.commit()
+            finally:
+                cursor.close()
+                conn.close()
+
+    # 从 db 加载已下载的 shortcode
+    def load_downloaded_shortcode(self):
+        if self.conn is None:
+            self.conn = sqlite3.connect(self.dbfile)
+        if self.cursor is None:
+            self.cursor = self.conn.cursor()
+        try:
+            self.cursor.execute("select code from shortcode")
+            for row in self.cursor:
+                self.downloaded_shortcode.append(row[0])
+            self.cursor.close()
+            self.conn.commit()
+        finally:
+            self.conn.close()
+            self.cursor = None
+            self.conn = None
+
+    # 将已下载的 shortcode 保存到数据库
+    def save_shortcode(self, shortcode):
+        if self.conn is None:
+            self.conn = sqlite3.connect(self.dbfile)
+        if self.cursor is None:
+            self.cursor = self.conn.cursor()
+        self.cursor.execute("insert into shortcode (code) values (?)", (shortcode,))
+
+    # 关闭数据库
+    def close_db(self):
+        if self.conn is not None:
+            self.cursor.close()
+            self.conn.commit()
+            self.conn.close()
 
 
 if __name__ == '__main__':
     it = Instagram(USERNAME, PASSWORD)
 
-    print('login')
+    print('mkdir\r\n')
+    it.mkdir()
+
+    print('login\r\n')
     it.login()
 
     page = 1
@@ -172,28 +244,36 @@ if __name__ == '__main__':
     while it.has_next_page:
         it.has_next_page = False
         page += 1
-        time.sleep(60 if page % 5 == 0 else 10)
+        time.sleep(30 if page % 5 == 0 else 10)
         print('get page: {}'.format(page))
         it.graphql_next()
 
-    page = 1
+    it.load_downloaded_shortcode()
+
+    print('\r\n')
+    page = 0
+    total = len(it.shortcodes)
     for shortcode in it.shortcodes:
+        if shortcode in it.downloaded_shortcode:
+            print("media {} already downloaded.pass".format(shortcode))
+            continue
+
         page += 1
         time.sleep(3 if page % 5 == 0 else 1)
-        print('get medias for: ' + shortcode)
+
         try:
+            print('get medias for: {}, {} of {}'.format(shortcode, page, total))
             it.get_medias(shortcode)
+
+            print('\tdownload medias')
+            for media in it.medias:
+                time.sleep(2 if page % 5 == 0 else 1)
+                it.download_media(media)
+            it.medias = []
+            it.save_shortcode(shortcode)
         except:
-            print('get media error')
+            print('get media error: ', sys.exc_info()[0])
 
-    print('mkdir')
-    it.mkdir()
+    it.close_db()
 
-    print('download medias')
-    page = 1
-    for media in it.medias:
-        page += 1
-        time.sleep(2 if page % 5 == 0 else 1)
-        it.download_media(media)
-
-    print('done...')
+    print('done...total download files is: '.format(it.new_download))
